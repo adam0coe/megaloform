@@ -1,10 +1,16 @@
-const express = require('express')
-const app = express()
-const port = 3000
-const db = require('./db')
+const express = require('express');
+const app = express();
+const port = 3000;
+const db = require('./db');
+const router = require('./router');
+const cors = require('cors');
+
+app.use(cors());
+app.use(express.json());
+app.use(router);
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello World!');
 })
 
 async function dbLink() {
