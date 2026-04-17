@@ -1,10 +1,13 @@
 //import { useState, useEffect } from 'react'
 import './App.css'
-import { Routes, Route, Navigate } from 'react-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Login from '../src/components/login/login';
+import Dashboard from '../src/components/dash/dash';
 import { upsertCandidate } from './services/candidate-input';
 
 function App() {
+
+  const navigate = useNavigate();
 
   async function handleSubmit (e) {
     e.preventDefault();
@@ -20,6 +23,7 @@ function App() {
 
       try {
         const userInput = await upsertCandidate({ email, password });
+        navigate(`/candidate/${userInput._id}`)
         e.target.reset();
       } catch (err) {
         console.log(err)
@@ -28,9 +32,11 @@ function App() {
   }
 
   return (
-    <>
-    <Login />
-    </>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/login" element={<Login handleSubmit={handleSubmit} />} />
+      <Route path="/candidate/:id" element={<Dashboard />} />
+    </Routes>
   )
 }
 
