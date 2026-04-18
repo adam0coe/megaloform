@@ -1,10 +1,39 @@
 import './dash.css'
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Steps from '../steps/steps'
+import Register from '../steps/all-steps/register/register'
+import { registerCandidate } from '../../services/candidate-input';
 
 
 
 export default function Dashboard() {
   const { id } = useParams();
+  const [currentStep, setCurrentStep] = useState(null);
+  const [candidate, setCandidate] = useState(null)
+
+  async function handleRegister (e) {
+      e.preventDefault();
+      if (e.target.firstName.value.trim() === '' || e.target.lastNames.value.trim() === '' ) {
+        alert('Must insert valid name!');
+      } else if (e.target.phone.value.trim() === '') {
+        alert('Must insert valid phone!');
+      } else {
+        const { firstName, lastNames, phone } = {
+          firstName: e.target.firstName.value,
+          lastNames: e.target.lastNames.value,
+          phone: e.target.phone.value,
+        };
+
+        try {
+          const updateCandidate = await registerCandidate(id, { firstName, lastNames, phone });
+          setCandidate(updateCandidate)
+          e.target.reset();
+        } catch (err) {
+          console.log(err)
+        }
+      }
+    }
 
   return (
     <>
@@ -12,7 +41,9 @@ export default function Dashboard() {
       <div id="dash-side-menu">
         <div id="user">
           <div id="user-img" className='user-icons'>😄</div>
-          <p id="username">{id}</p>
+          <p id="username">{
+            candidate?.profile?.firstName ? `Olá, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
+            }</p>
         </div>
         <div id="config" className='user-icons'>⚙️</div>
       </div>
@@ -21,16 +52,16 @@ export default function Dashboard() {
           <div id="notifications">🔔</div>
           <div id="warning">⚠️</div>
         </div>
-        <div id="dash-steps">
-          <div className="step">1</div>
-          <div className="step">2</div>
-          <div className="step">3</div>
-          <div className="step">4</div>
-          <div className="step">5</div>
-          <div className="step">6</div>
+        {currentStep === null ? (
+          < Steps onCurrentStep={setCurrentStep}/>
+        ) : (
+          <div id="dash-step">
+            <button onClick={() => setCurrentStep(null)}>❌</button>
+            {currentStep === 'registration' && <Register handleRegister={handleRegister}/>}
+          </div>
+        )}
         </div>
       </div>
-    </div>
     </>
   )
 }
