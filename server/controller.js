@@ -46,8 +46,6 @@ async function register(req, res){
   const { id } = req.params;
   const { firstName, lastNames, phone } = req.body;
 
-  console.log(req.params, id, req.body)
-
   if (!firstName || !lastNames || !phone) return res.status(400).json({ message: "This register is missing fields!" })
 
   try {
@@ -89,4 +87,46 @@ async function fetchCandidate(req, res) {
   }
 }
 
-module.exports = { enter, register, fetchCandidate }
+async function testCandidate(req, res) {
+  const { id } = req.params;
+  const { choices } = req.body;
+  let score = 0;
+  const correctChoices = ['a', 'b', 'c', 'd', 'a']
+
+  if (!Array.isArray(choices) || choices.length !== 5 || choices.some(c => !c)) {
+    return res.status(400).json({ message: "The test has unanswered items!" })
+  }
+
+
+  for (let i = 0; i < correctChoices.length; i++) {
+    if (choices[i] === correctChoices[i]) score += 2;
+  }
+
+  const status = score < 6 ? "failed" : "passed";
+
+  try {
+    const testedCandidate = await Candidate.findByIdAndUpdate(id,
+      {
+        $set: {
+          "steps.test.choices": choices,
+          "steps.test.score": score,
+          "steps.test.currentStatus": status,
+          "steps.test.updatedAt": new Date(),
+        },
+      },
+      { new: true, runValidators: true }
+     );
+
+     if (!testedCandidate) {
+      return res.status(404).json({ message: "Candidate not found!" })
+     }
+
+     return res.status(200).json(testedCandidate);
+
+  } catch(err) {
+    console.error(err);
+    return res.status(500).json({ message: 'Server Error' })
+  }
+}
+
+module.exports = { enter, register, fetchCandidate, testCandidate}

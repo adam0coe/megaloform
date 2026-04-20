@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Steps from '../steps/steps'
 import Register from '../steps/all-steps/register/register'
-import { registerCandidate, fetchCandidate } from '../../services/candidate-input';
+import Test from '../steps/all-steps/test/test'
+import { updateCandidate, fetchCandidate, testCandidate } from '../../services/candidate-input';
 
 
 
@@ -12,17 +13,17 @@ export default function Dashboard() {
   const [currentStep, setCurrentStep] = useState(null);
   const [candidate, setCandidate] = useState(null)
 
-    useEffect(() => {
-      async function load() {
-        try {
-          const data = await fetchCandidate(id);
-          setCandidate(data);
-        } catch (err) {
-          console.log(err);
-        }
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await fetchCandidate(id);
+        setCandidate(data);
+      } catch (err) {
+        console.log(err);
       }
-      load();
-    }, [id]);
+    }
+    load();
+  }, [id]);
 
   async function handleRegister (e) {
       e.preventDefault();
@@ -38,8 +39,31 @@ export default function Dashboard() {
         };
 
         try {
-          const updateCandidate = await registerCandidate(id, { firstName, lastNames, phone });
-          setCandidate(updateCandidate)
+          const registeredCandidate = await updateCandidate(id, { firstName, lastNames, phone });
+          setCandidate(registeredCandidate)
+          e.target.reset();
+        } catch (err) {
+          console.log(err)
+        }
+      }
+  }
+
+  async function handleTest (e) {
+      e.preventDefault();
+      if (!e.target.q1.value || !e.target.q2.value || !e.target.q3.value || !e.target.q4.value || !e.target.q5.value) {
+        alert('All questions should be answered!');
+      } else {
+        const choices = [
+          e.target.q1.value,
+          e.target.q2.value,
+          e.target.q3.value,
+          e.target.q4.value,
+          e.target.q5.value
+        ]
+
+        try {
+          const testedCandidate = await testCandidate(id, choices);
+          setCandidate(testedCandidate)
           e.target.reset();
         } catch (err) {
           console.log(err)
@@ -70,6 +94,7 @@ export default function Dashboard() {
           <div id="dash-step">
             <button onClick={() => setCurrentStep(null)}>❌</button>
             {currentStep === 'registration' && <Register handleRegister={handleRegister} registrationStatus={candidate?.steps?.registration?.currentStatus}/>}
+            {currentStep === 'test' && <Test handleTest={handleTest} testStatus={candidate?.steps?.test?.currentStatus} />}
           </div>
         )}
         </div>

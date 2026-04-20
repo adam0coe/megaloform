@@ -25,6 +25,7 @@ const candidateSchema = new mongoose.Schema({
     test: {
       access: { type: String, enum: ['available', 'locked'], default: 'locked' },
       currentStatus: { type: String, enum: ['unavailable', 'pending', 'submitted', 'passed', 'failed'], default: 'unavailable' },
+      choices: { type: [String], default: []},
       score: { type: Number, default: 0 },
       updatedAt:{ type: Date, default: Date.now }
     },

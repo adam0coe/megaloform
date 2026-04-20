@@ -1,3 +1,5 @@
+//import { register } from "../../../server/controller";
+
 export async function upsertCandidate(candidateInput) {
   const res = await fetch('http://localhost:3000/auth/enter', {
     method: "POST",
@@ -12,15 +14,28 @@ export async function upsertCandidate(candidateInput) {
   }
 }
 
-export async function registerCandidate(candidateId, registerInput) {
-  const res = await fetch(`http://localhost:3000/candidates/${candidateId}`, {
+
+export async function updateCandidate(candidateId, dataInput) {
+  const res = await fetch(`http://localhost:3000/candidates/${candidateId}/registration`, {
     method: "PATCH",
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(registerInput)
+    body: JSON.stringify(dataInput)
   })
 
   if (res.ok) return res.json();
   throw new Error(`Failed to register user: error ${res.status}`)
+}
+
+export async function testCandidate(candidateId, choices) {
+  console.log(choices)
+  const res = await fetch(`http://localhost:3000/candidates/${candidateId}/test`, {
+    method: "PATCH",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ choices })
+  })
+
+  if (res.ok) return res.json();
+  throw new Error(`Failed to test user: error ${res.status}`)
 }
 
 export async function fetchCandidate(candidateId) {
