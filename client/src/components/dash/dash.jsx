@@ -1,9 +1,9 @@
 import './dash.css'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Steps from '../steps/steps'
 import Register from '../steps/all-steps/register/register'
-import { registerCandidate } from '../../services/candidate-input';
+import { registerCandidate, fetchCandidate } from '../../services/candidate-input';
 
 
 
@@ -11,6 +11,18 @@ export default function Dashboard() {
   const { id } = useParams();
   const [currentStep, setCurrentStep] = useState(null);
   const [candidate, setCandidate] = useState(null)
+
+    useEffect(() => {
+      async function load() {
+        try {
+          const data = await fetchCandidate(id);
+          setCandidate(data);
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      load();
+    }, [id]);
 
   async function handleRegister (e) {
       e.preventDefault();
@@ -42,7 +54,7 @@ export default function Dashboard() {
         <div id="user">
           <div id="user-img" className='user-icons'>😄</div>
           <p id="username">{
-            candidate?.profile?.firstName ? `Olá, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
+            candidate?.profile?.firstName ? `Hello, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
             }</p>
         </div>
         <div id="config" className='user-icons'>⚙️</div>
@@ -57,7 +69,7 @@ export default function Dashboard() {
         ) : (
           <div id="dash-step">
             <button onClick={() => setCurrentStep(null)}>❌</button>
-            {currentStep === 'registration' && <Register handleRegister={handleRegister}/>}
+            {currentStep === 'registration' && <Register handleRegister={handleRegister} registrationStatus={candidate?.steps?.registration?.currentStatus}/>}
           </div>
         )}
         </div>

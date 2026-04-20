@@ -4,5 +4,6 @@ const controller = require('./controller')
 
 router.post('/auth/enter', controller.enter)
 router.patch('/candidates/:id', controller.register)
+router.get('/candidates/:id', controller.fetchCandidate)
 
 module.exports = router;

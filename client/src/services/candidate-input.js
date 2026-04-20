@@ -22,3 +22,9 @@ export async function registerCandidate(candidateId, registerInput) {
   if (res.ok) return res.json();
   throw new Error(`Failed to register user: error ${res.status}`)
 }
+
+export async function fetchCandidate(candidateId) {
+  const res = await fetch(`http://localhost:3000/candidates/${candidateId}`);
+  if (!res.ok) throw new Error(`Failed to fetch candidate: ${res.status}`);
+  return res.json();
+}

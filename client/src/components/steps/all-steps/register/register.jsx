@@ -1,4 +1,12 @@
-export default function Register({ handleRegister }) {
+export default function Register({ handleRegister, registrationStatus }) {
+  if (registrationStatus === "submitted") {
+  return (
+  <>
+  <p>congratulations, You've succesfully submitted your info! You may close this window and proceed to the next step!</p>
+  </>
+  )
+  ;
+}
   return (
     <>
       <div id="login-container">

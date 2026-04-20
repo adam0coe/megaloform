@@ -75,4 +75,18 @@ async function register(req, res){
   }
 }
 
-module.exports = { enter, register }
+async function fetchCandidate(req, res) {
+  const { id } = req.params;
+  try {
+    const candidate = await Candidate.findById(id)
+    if (!candidate) {
+      return res.status(404).json({ message: "Candidate not found" });
+    }
+    return res.status(200).json(candidate);
+  } catch(err) {
+    console.error(err)
+    return res.status(500).json({ message: "Failed to fetch" });
+  }
+}
+
+module.exports = { enter, register, fetchCandidate }
