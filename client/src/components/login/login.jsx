@@ -1,4 +1,5 @@
 import './login.css'
+import logo from '../../assets/logo-color.png'
 
 export default function Login({handleSubmit}) {
 
@@ -7,21 +8,20 @@ export default function Login({handleSubmit}) {
     <div id="login-container">
       <div id="login-form">
         <div id="form-title">
-          <p>Log in or Sing up</p>
+          <img id='logo-img' src={logo} alt="" />
+          <p id='login-form-title'>Access your account</p>
         </div>
         <div id="form-body">
           <form action="" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">email</label>
+              <label htmlFor="email">EMAIL</label>
               <input type="email" name="email" id="email" placeholder='john.smith@mail.com' required/>
             </div>
             <div className="form-group">
-              <label htmlFor="password">password</label>
+              <label htmlFor="password">PASSWORD</label>
               <input type="password" name="password" id="password" minLength="4" required/>
             </div>
-            <div className="form-group">
-              <input type="submit" name="sumbmit" id="submit" value={'submit'}/>
-            </div>
+              <input type="submit" name="sumbmit" id="submit" value={'Submit'}/>
           </form>
         </div>
       </div>
