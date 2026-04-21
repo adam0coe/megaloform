@@ -1,3 +1,11 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lexend:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+
 /* 1. Use a more-intuitive box-sizing model */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -57,9 +65,24 @@ h1, h2, h3, h4, h5, h6 {
   font-family: "Lexend", sans-serif;
 }
 
+:root {
+  --font-light:aliceblue;
+  --green: #77DD77;
+  --green-hover: #85e585;
+  --bg-light: rgb(90, 90, 90);
+  --bg-medium: rgb(31, 31, 31);
+  --bg-dark: rgb(8, 8, 8);
+  --blue-hover:rgb(41, 98, 163);
+  --blue: rgb(46, 108, 179);
+  --blue-available:rgb(95, 166, 247);
 
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+  /*
+  future dark mode implementation
+  --bg-main: light-dark(var(--light-pink), var(--text-black));
+  --bg-cards: light-dark(var(--white), var(--black));
+  --header-footer: light-dark(var(--pink), var(--black));
+  --main-txt: light-dark(var(--text-black), var(--white));
+  --input-box: light-dark(var(--light-blue), var(--text-black)); */
 
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+}
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lexend:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');

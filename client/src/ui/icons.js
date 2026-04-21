@@ -1,5 +1,19 @@
-import { mdiLockOutline } from '@mdi/js';
+import {
+  mdiLockOutline,
+  mdiCog,
+  mdiMenu,
+  mdiBellOutline,
+  mdiAlertOutline,
+  mdiClose,
 
-export const ICON_PATHS = {
-  lock: mdiLockOutline
+
+ } from '@mdi/js';
+
+export const icons = {
+  lock: mdiLockOutline,
+  cog: mdiCog,
+  menu: mdiMenu,
+  bell: mdiBellOutline ,
+  alert: mdiAlertOutline,
+  close: mdiClose,
 }

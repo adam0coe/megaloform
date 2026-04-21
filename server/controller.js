@@ -104,7 +104,7 @@ async function testCandidate(req, res) {
   }
 
   const status = score < 6 ? "failed" : "passed";
-  const letterAvailable = score === "failed" ? "locked" : "available"
+  const letterAvailable = status === "failed" ? "locked" : "available"
 
   try {
     const testedCandidate = await Candidate.findByIdAndUpdate(id,

@@ -2,6 +2,53 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 80%;
   font-size: 2rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+.step-icon {
+  height: 2rem;
+  color: rgb(124, 124, 124);
+}
+
+.step--available {
+  background-color: var(--blue-available);
+  border-style: none;
+  color: aliceblue;
+}
+
+.step--available:hover {
+cursor: pointer;
+}
+
+.step--locked {
+  background-color: var(--bg-light);
+  border-style: none;
+  color: rgb(124, 124, 124);
+}
+
+.step--failed {
+  background-color: red;
+  border-style: none;
+  color: aliceblue
+}
+.step--failed:hover {
+cursor: pointer;
+}
+
+.step--passed {
+  background-color: green;
+  border-style: none;
+  color: aliceblue
+}
+
+.step--passed:hover {
+cursor: pointer;
+}
+
+button {
+  display: flex;
+  gap: 1rem;
 }

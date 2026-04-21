@@ -6,8 +6,9 @@ import Register from '../steps/all-steps/register/register'
 import Test from '../steps/all-steps/test/test'
 import { updateCandidate, fetchCandidate, testCandidate } from '../../services/candidate-input';
 import profilePic from '../../assets/profile-pic.png'
-import Icon from "@mdi/react"
-import { ICON_PATHS } from "../../ui/icons"
+import logo from '../../assets/logo-bw.webp'
+import { Icon } from "@mdi/react"
+import { icons } from "../../ui/icons"
 
 export default function Dashboard() {
   const { id } = useParams();
@@ -82,18 +83,22 @@ export default function Dashboard() {
             candidate?.profile?.firstName ? `Hello, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
             }</p>
         </div>
-        <div id="config" className='user-icons'>⚙️</div>
+        <div id="config" className='user-icons'><Icon path={icons.menu} size={1.5} /></div>
+
       </div>
       <div id="dash-main">
         <div id="dash-header">
-          <div id="notifications">🔔</div>
-          <div id="warning">⚠️</div>
+          <img id='logo-side-menu' src={logo} alt="" />
+          <div id='header-icons'>
+            <div id="notifications" className='user-icons'><Icon path={icons.bell} size={1.5} /></div>
+            <div id="warning" className='user-icons'><Icon path={icons.alert} size={1.5} /></div>
+          </div>
         </div>
         {currentStep === null ? (
           < Steps onCurrentStep={setCurrentStep} steps={candidate?.steps}/>
         ) : (
           <div id="dash-step">
-            <button onClick={() => setCurrentStep(null)}>❌</button>
+            <button id='close-btn' onClick={() => setCurrentStep(null)}><Icon path={icons.close} size={1.5} /></button>
             {currentStep === 'registration' && <Register handleRegister={handleRegister} registrationStatus={candidate?.steps?.registration?.currentStatus}/>}
             {currentStep === 'test' && <Test handleTest={handleTest} testStatus={candidate?.steps?.test?.currentStatus} />}
           </div>
