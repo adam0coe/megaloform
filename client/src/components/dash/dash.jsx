@@ -5,8 +5,9 @@ import Steps from '../steps/steps'
 import Register from '../steps/all-steps/register/register'
 import Test from '../steps/all-steps/test/test'
 import { updateCandidate, fetchCandidate, testCandidate } from '../../services/candidate-input';
-
-
+import profilePic from '../../assets/profile-pic.png'
+import Icon from "@mdi/react"
+import { ICON_PATHS } from "../../ui/icons"
 
 export default function Dashboard() {
   const { id } = useParams();
@@ -76,7 +77,7 @@ export default function Dashboard() {
     <div id='dash-container'>
       <div id="dash-side-menu">
         <div id="user">
-          <div id="user-img" className='user-icons'>😄</div>
+          <div className='user-icons'><img id="user-img" src={profilePic} alt="" /></div>
           <p id="username">{
             candidate?.profile?.firstName ? `Hello, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
             }</p>
