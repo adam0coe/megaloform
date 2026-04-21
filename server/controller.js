@@ -55,8 +55,9 @@ async function register(req, res){
           "profile.firstName": firstName,
           "profile.lastNames": lastNames,
           "profile.phone": phone,
-          "steps.registration.currentStatus": "submitted",
+          "steps.registration.currentStatus": "passed",
           "steps.registration.updatedAt": new Date(),
+          "steps.test.access": "available"
         },
       },
       { new: true, runValidators: true }
@@ -103,6 +104,7 @@ async function testCandidate(req, res) {
   }
 
   const status = score < 6 ? "failed" : "passed";
+  const letterAvailable = score === "failed" ? "locked" : "available"
 
   try {
     const testedCandidate = await Candidate.findByIdAndUpdate(id,
@@ -112,6 +114,7 @@ async function testCandidate(req, res) {
           "steps.test.score": score,
           "steps.test.currentStatus": status,
           "steps.test.updatedAt": new Date(),
+          "steps.reflectiveQuestions.access": letterAvailable,
         },
       },
       { new: true, runValidators: true }

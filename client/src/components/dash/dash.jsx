@@ -89,7 +89,7 @@ export default function Dashboard() {
           <div id="warning">⚠️</div>
         </div>
         {currentStep === null ? (
-          < Steps onCurrentStep={setCurrentStep}/>
+          < Steps onCurrentStep={setCurrentStep} steps={candidate?.steps}/>
         ) : (
           <div id="dash-step">
             <button onClick={() => setCurrentStep(null)}>❌</button>

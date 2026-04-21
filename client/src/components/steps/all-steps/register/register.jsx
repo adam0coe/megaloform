@@ -1,5 +1,5 @@
 export default function Register({ handleRegister, registrationStatus }) {
-  if (registrationStatus === "submitted") {
+  if (registrationStatus === "submitted" || registrationStatus === "passed") {
   return (
   <>
   <p>congratulations, You've succesfully submitted your info! You may close this window and proceed to the next step!</p>
