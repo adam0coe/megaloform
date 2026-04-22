@@ -12,6 +12,7 @@
   justify-content: space-between;
   padding: 4rem 1rem;
   gap: 5rem;
+  width: 20dvw;
 }
 
 #logo-side-menu {
@@ -67,18 +68,35 @@
 #dash-steps {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  row-gap: 4rem;
+  column-gap: 8rem;
+
 }
 
 #dash-step{
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 100%;
   align-self:center ;
+  background-color: var(--bg-dark);
+  padding: 2rem;
+  border-radius: 2rem;
+  max-height: 70dvh;
+  overflow-y: scroll;
+  scrollbar-width: none;
 }
 
 #close-btn {
   width: 3rem;
   align-self: flex-end;
+  background-color: brown;
+  border: none;
+  border-radius: 0.5rem;
+  color: aliceblue;
+}
 
+#main-content {
+  display: flex;
+  padding: 4rem;
+  justify-content: center;
 }

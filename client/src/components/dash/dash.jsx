@@ -94,15 +94,17 @@ export default function Dashboard() {
             <div id="warning" className='user-icons'><Icon path={icons.alert} size={1.5} /></div>
           </div>
         </div>
-        {currentStep === null ? (
-          < Steps onCurrentStep={setCurrentStep} steps={candidate?.steps}/>
-        ) : (
-          <div id="dash-step">
-            <button id='close-btn' onClick={() => setCurrentStep(null)}><Icon path={icons.close} size={1.5} /></button>
-            {currentStep === 'registration' && <Register handleRegister={handleRegister} registrationStatus={candidate?.steps?.registration?.currentStatus}/>}
-            {currentStep === 'test' && <Test handleTest={handleTest} testStatus={candidate?.steps?.test?.currentStatus} />}
-          </div>
-        )}
+        <div id="main-content">
+          {currentStep === null ? (
+            < Steps onCurrentStep={setCurrentStep} steps={candidate?.steps}/>
+          ) : (
+            <div id="dash-step">
+              <button id='close-btn' onClick={() => setCurrentStep(null)}><Icon path={icons.close} size={1.5} /></button>
+              {currentStep === 'registration' && <Register handleRegister={handleRegister} registrationStatus={candidate?.steps?.registration?.currentStatus}/>}
+              {currentStep === 'test' && <Test handleTest={handleTest} testStatus={candidate?.steps?.test?.currentStatus} username={candidate?.profile?.firstName}/>}
+            </div>
+          )}
+        </div>
         </div>
       </div>
     </>

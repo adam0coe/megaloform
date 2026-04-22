@@ -6,10 +6,20 @@ export default function Login({handleSubmit}) {
   return (
     <>
     <div id="login-container">
+      <div id="art-div">
+        <div id='img-container'>
+          <img src="" alt="" />
+        </div>
+        <div id="eb-logo"></div>
+        <div id="art-txt">
+          <h1 id='welcome-title'></h1>
+          <p id='welcome-txt'></p>
+        </div>
+      </div>
       <div id="login-form">
         <div id="form-title">
           <img id='logo-img' src={logo} alt="" />
-          <p id='login-form-title'>Access your account</p>
+          <p className="data-form-title">Access your account</p>
         </div>
         <div id="form-body">
           <form action="" onSubmit={handleSubmit}>

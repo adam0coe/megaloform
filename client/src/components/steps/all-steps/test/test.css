@@ -10,3 +10,33 @@ label {
   align-items: center;
   gap: 0.3rem;
 }
+
+#test-body {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 1rem 0rem;
+  font-size: 1.5rem;
+}
+
+input[type='radio'] {
+  height: 2rem;
+  border: none;
+  width: 1.2rem;
+  font-size: large;
+}
+
+#col-one, #col-two {
+  width: 50%;
+}
+
+.question-group {
+  padding-bottom: 2rem;
+}
+
+.q-item{
+  font-size: 1.2rem;
+}
+
+.q-question{
+  padding-bottom: 0.5rem;
+}
