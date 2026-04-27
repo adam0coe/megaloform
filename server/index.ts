@@ -1,9 +1,9 @@
-const express = require('express');
+import express from 'express';
 const app = express();
 const port = 3000;
-const db = require('./db');
-const router = require('./router');
-const cors = require('cors');
+import db from './db';
+import router from './router';
+import cors from 'cors';
 
 app.use(cors());
 app.use(express.json());
@@ -20,4 +20,3 @@ async function dbLink() {
 dbLink()
 .then(() => app.listen(port, () => {console.log(`🔥 Server's up at ${port}!`)}))
 .catch(console.error)
-

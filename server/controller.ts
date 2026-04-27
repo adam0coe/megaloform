@@ -1,7 +1,8 @@
-const Candidate = require('./model');
-const bcrypt = require("bcryptjs");
+import Candidate from './model';
+import bcrypt from "bcryptjs";
+import { Request, Response } from 'express';
 
-async function enter(req, res) {
+async function enter(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
 
@@ -41,7 +42,7 @@ async function enter(req, res) {
   }
 }
 
-async function register(req, res){
+async function register(req: Request, res: Response){
 
   const { id } = req.params;
   const { firstName, lastNames, phone } = req.body;
@@ -74,7 +75,7 @@ async function register(req, res){
   }
 }
 
-async function fetchCandidate(req, res) {
+async function fetchCandidate(req: Request, res: Response) {
   const { id } = req.params;
   try {
     const candidate = await Candidate.findById(id)
@@ -88,7 +89,7 @@ async function fetchCandidate(req, res) {
   }
 }
 
-async function testCandidate(req, res) {
+async function testCandidate(req: Request, res: Response) {
   const { id } = req.params;
   const { choices } = req.body;
   let score = 0;
@@ -132,4 +133,4 @@ async function testCandidate(req, res) {
   }
 }
 
-module.exports = { enter, register, fetchCandidate, testCandidate}
+export { enter, register, fetchCandidate, testCandidate }
