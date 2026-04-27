@@ -102,6 +102,9 @@ export default function Dashboard() {
               <button id='close-btn' onClick={() => setCurrentStep(null)}><Icon path={icons.close} size={1.5} /></button>
               {currentStep === 'registration' && <Register handleRegister={handleRegister} registrationStatus={candidate?.steps?.registration?.currentStatus}/>}
               {currentStep === 'test' && <Test handleTest={handleTest} testStatus={candidate?.steps?.test?.currentStatus} username={candidate?.profile?.firstName}/>}
+              {!['registration', 'test'].includes(currentStep) && (
+                <p className="step-coming-soon">This step is coming soon.</p>
+              )}
             </div>
           )}
         </div>

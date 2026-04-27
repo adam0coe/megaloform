@@ -1,8 +1,7 @@
-//import { useState, useEffect } from 'react'
 import './App.css'
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Login from '../src/components/login/login';
-import Dashboard from '../src/components/dash/dash';
+import Login from './components/login/login';
+import Dashboard from './components/dash/dash';
 import { upsertCandidate } from './services/candidate-input';
 
 function App() {
@@ -14,7 +13,7 @@ function App() {
     if (e.target.email.value.trim() === '') {
       alert('Must insert valid email!');
     } else if (e.target.password.value.trim() === '') {
-      alert('Must insert valid email!');
+      alert('Must insert valid password!');
     } else {
       const { email, password } = {
         email: e.target.email.value,

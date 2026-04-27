@@ -17,7 +17,7 @@ export default function Register({ handleRegister, registrationStatus }) {
             <p className="data-form-title">Registration:</p>
           </div>
           <div id="form-body">
-            <form action="" onSubmit={handleRegister}>
+            <form onSubmit={handleRegister}>
               <div className="form-group">
                 <label htmlFor="firstName">NAME</label>
                 <input type="text" name="firstName" id="firstName" required/>
@@ -30,7 +30,7 @@ export default function Register({ handleRegister, registrationStatus }) {
                 <label htmlFor="phone">PHONE</label>
                 <input type="tel" name="phone" id="phone" required/>
               </div>
-                <input type="submit" name="register-sumbmit" id="register-submit" value={'submit'}/>
+                <input type="submit" name="register-submit" id="register-submit" value={'submit'}/>
             </form>
         </div>
       </div>
