@@ -25,7 +25,7 @@ export default function Test({ handleTest, testStatus, username }) {
             <p className="data-form-title">Test</p>
           </div>
           <div >
-            <form action="" onSubmit={handleTest}>
+            <form onSubmit={handleTest}>
               <div id="test-body">
               <div id="col-one">
                 <div className="form-group test-form-group">
@@ -117,7 +117,7 @@ export default function Test({ handleTest, testStatus, username }) {
               </div>
               </div>
               </div>
-                <input type="submit" name="register-sumbmit" id="register-submit" value={'submit'}/>
+                <input type="submit" name="test-submit" id="test-submit" value={'submit'}/>
             </form>
         </div>
       </div>
