@@ -8,7 +8,7 @@ type StepUI = {
   icon: string | null
 }
 
-function getStepUI(step: Step<string> | undefined): StepUI {
+export function getStepUI(step: Step<string> | undefined): StepUI {
   if (!step) return { className: 'step step--loading', icon: null }
   if (step.access === 'locked') return { className: 'step step--locked', icon: icons.lock }
   if (step.currentStatus === 'failed') return { className: 'step step--failed', icon: null }
