@@ -2,13 +2,16 @@ import './login.css'
 import logo from '../../assets/logo-color-w.png'
 import loginImg from '../../assets/bg-imgs/login.png'
 
-export default function Login({handleSubmit}) {
+type LoginProps = {
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+}
 
+export default function Login({ handleSubmit }: LoginProps) {
   return (
     <div id="login-container">
       <div id="img-container">
         <img className="bg-decoration" src={loginImg} alt="" aria-hidden="true" />
-  
+
         <div id="art-div">
           <div id="eb-logo-container">
             <img id="eb-img" src={logo} alt="Ensina Brasil" />
@@ -23,7 +26,7 @@ export default function Login({handleSubmit}) {
             </p>
           </div>
         </div>
-  
+
         <div id="login-form">
           <div id="form-title">
             <h1 className="data-form-title">Access your account</h1>
@@ -57,5 +60,5 @@ export default function Login({handleSubmit}) {
         </div>
       </div>
     </div>
-  );
+  )
 }
