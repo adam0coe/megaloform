@@ -1,17 +1,7 @@
-import express from 'express';
-const app = express();
-const port = 3000;
+import app from './app';
 import db from './db';
-import router from './router';
-import cors from 'cors';
 
-app.use(cors());
-app.use(express.json());
-app.use(router);
-
-app.get('/', (req, res) => {
-  res.send('Let\'s serve some candidates!');
-})
+const port = 3000;
 
 async function dbLink() {
   await db();
