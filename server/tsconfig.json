@@ -14,5 +14,5 @@
     "sourceMap": true
   },
   "include": ["**/*.ts"],
-  "exclude": ["node_modules", "dist", "tests/integration"]
+  "exclude": ["node_modules", "dist", "tests/integration", "tests/e2e"]
 }
