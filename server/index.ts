@@ -1,7 +1,7 @@
 import app from './app';
 import db from './db';
 
-const port = 3000;
+const port = Number(process.env.PORT) || 3000;
 
 async function dbLink() {
   await db();
