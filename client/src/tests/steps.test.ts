@@ -38,8 +38,6 @@ describe('getStepUI', () => {
   })
 
   it('locked access takes precedence over a failed status', () => {
-    // Even if the candidate has somehow ended up locked-and-failed,
-    // the UI should show "locked" because that branch is checked first.
     expect(getStepUI({ access: 'locked', currentStatus: 'failed' })).toEqual({
       className: 'step step--locked',
       icon: icons.lock,

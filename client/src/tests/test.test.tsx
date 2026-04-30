@@ -5,7 +5,6 @@ describe('Test (quiz)', () => {
   it('renders the quiz when testStatus is undefined', () => {
     render(<Test handleTest={vi.fn()} testStatus={undefined} username="Alice" />)
 
-    // First question is visible — sufficient signal that the form rendered
     expect(screen.getByText(/what is your name/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument()
   })
@@ -19,7 +18,6 @@ describe('Test (quiz)', () => {
     render(<Test handleTest={vi.fn()} testStatus="failed" username="Alice" />)
 
     expect(screen.getByText(/your answers didn't pass/i)).toBeInTheDocument()
-    // Quiz is NOT rendered
     expect(screen.queryByText(/what is your name/i)).not.toBeInTheDocument()
   })
 
@@ -33,10 +31,8 @@ describe('Test (quiz)', () => {
   it('renders the username as option (a) of question 1', () => {
     render(<Test handleTest={vi.fn()} testStatus={undefined} username="Alice" />)
 
-    // The radio whose accessible name is "Alice" should exist
     const aliceOption = screen.getByRole('radio', { name: 'Alice' })
 
-    // ...and it should be question 1, option a — not pasted into the wrong slot
     expect(aliceOption).toHaveAttribute('name', 'q1')
     expect(aliceOption).toHaveAttribute('value', 'a')
   })

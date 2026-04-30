@@ -15,8 +15,6 @@ describe('candidate-input service', () => {
     vi.unstubAllGlobals()
   })
 
-  // ---------- signup ----------
-
   describe('signup', () => {
     it('POSTs to /auth/signup with email and password in body', async () => {
       vi.mocked(fetch).mockResolvedValue({
@@ -61,8 +59,6 @@ describe('candidate-input service', () => {
     })
   })
 
-  // ---------- login ----------
-
   describe('login', () => {
     it('POSTs to /auth/login with email and password in body', async () => {
       vi.mocked(fetch).mockResolvedValue({
@@ -94,8 +90,6 @@ describe('candidate-input service', () => {
     })
   })
 
-  // ---------- updateCandidate ----------
-
   describe('updateCandidate', () => {
     it('PATCHes to /candidates/:id/registration with body and Authorization header', async () => {
       vi.mocked(fetch).mockResolvedValue({
@@ -123,8 +117,6 @@ describe('candidate-input service', () => {
     })
   })
 
-  // ---------- testCandidate ----------
-
   describe('testCandidate', () => {
     it('PATCHes to /candidates/:id/test with choices and Authorization header', async () => {
       vi.mocked(fetch).mockResolvedValue({
@@ -146,8 +138,6 @@ describe('candidate-input service', () => {
       )
     })
   })
-
-  // ---------- fetchCandidate ----------
 
   describe('fetchCandidate', () => {
     it('GETs /candidates/:id with Authorization header', async () => {
