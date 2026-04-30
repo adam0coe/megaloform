@@ -1,32 +1,35 @@
 import './dash.css'
-import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Steps from '../steps/steps'
 import Register from '../steps/all-steps/register/register'
 import Test from '../steps/all-steps/test/test'
-import { updateCandidate, fetchCandidate, testCandidate } from '../../services/candidate-input'
+import { updateCandidate, testCandidate } from '../../services/candidate-input'
+import { useAuth } from '../../auth/AuthContext'
 import profilePic from '../../assets/profile-pic.png'
 import logo from '../../assets/logo-bw.webp'
 import { Icon } from '@mdi/react'
 import { icons } from '../../ui/icons'
-import type { Candidate } from '../../types'
 
 export default function Dashboard() {
-  const { id } = useParams() as { id: string }
+  // candidate, token, and refresh helpers all come from AuthContext now.
+  // No more useEffect+fetch on mount — login/signup already populated context.
+  const { candidate, token, setCandidate, logout } = useAuth()
+  const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState<string | null>(null)
-  const [candidate, setCandidate] = useState<Candidate | null>(null)
 
-  useEffect(() => {
-    async function load() {
-      try {
-        const data = await fetchCandidate(id)
-        setCandidate(data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    load()
-  }, [id])
+  function handleLogout() {
+    logout()
+    // `replace` so the back button doesn't return the user to the dashboard
+    // they just logged out of.
+    navigate('/login', { replace: true })
+  }
+
+  // Token is guaranteed by ProtectedRoute, but TS doesn't know that —
+  // narrow it here so the service calls below get a string.
+  if (!candidate || !token) return null
+
+  const id = candidate._id
 
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -45,8 +48,8 @@ export default function Dashboard() {
     }
 
     try {
-      const registeredCandidate = await updateCandidate(id, { firstName, lastNames, phone })
-      setCandidate(registeredCandidate)
+      const registered = await updateCandidate(id, { firstName, lastNames, phone }, token!)
+      setCandidate(registered)
       form.reset()
     } catch (err) {
       console.log(err)
@@ -66,8 +69,8 @@ export default function Dashboard() {
     }
 
     try {
-      const testedCandidate = await testCandidate(id, choices)
-      setCandidate(testedCandidate)
+      const tested = await testCandidate(id, choices, token!)
+      setCandidate(tested)
       form.reset()
     } catch (err) {
       console.log(err)
@@ -83,6 +86,22 @@ export default function Dashboard() {
             <p id="username">{
               candidate?.profile?.firstName ? `Hello, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
             }</p>
+            <button
+              type="button"
+              onClick={handleLogout}
+              style={{
+                marginTop: '0.5rem',
+                padding: '0.4rem 0.8rem',
+                background: 'transparent',
+                color: 'inherit',
+                border: '1px solid currentColor',
+                borderRadius: '0.25rem',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+              }}
+            >
+              Log out
+            </button>
           </div>
           <div id="config" className='user-icons'><Icon path={icons.menu} size={1.5} /></div>
         </div>
