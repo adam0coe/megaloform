@@ -14,8 +14,6 @@ export default function Login() {
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  // The bug fix: errors that previously hit a silent console.log are now
-  // bound to UI state and shown to the user.
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
@@ -31,9 +29,6 @@ export default function Login() {
 
     setSubmitting(true)
     try {
-      // signup/login return the new candidate directly — we use its id for
-      // navigation right away. Reading `candidate` from the surrounding
-      // useAuth() closure here would give the stale (pre-update) value.
       const newCandidate = mode === 'signup'
         ? await signup(trimmedEmail, password)
         : await login(trimmedEmail, password)

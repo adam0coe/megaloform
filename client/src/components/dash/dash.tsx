@@ -12,19 +12,13 @@ import { Icon } from '@mdi/react'
 import { icons } from '../../ui/icons'
 
 export default function Dashboard() {
-  // candidate, token, and refresh helpers all come from AuthContext now.
-  // No more useEffect+fetch on mount — login/signup already populated context.
   const { candidate, token, setCandidate, logout } = useAuth()
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState<string | null>(null)
 
-  // Hamburger menu (the #config icon). Open on click, close on outside click
-  // or after selecting an item.
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement | null>(null)
 
-  // Outside-click closes the menu. We attach the listener only while the
-  // menu is open — no work happening during the 99% of time it's closed.
   useEffect(() => {
     if (!menuOpen) return
     function handleClickOutside(e: MouseEvent) {
@@ -39,13 +33,9 @@ export default function Dashboard() {
   function handleLogout() {
     setMenuOpen(false)
     logout()
-    // `replace` so the back button doesn't return the user to the dashboard
-    // they just logged out of.
     navigate('/login', { replace: true })
   }
 
-  // Token is guaranteed by ProtectedRoute, but TS doesn't know that —
-  // narrow it here so the service calls below get a string.
   if (!candidate || !token) return null
 
   const id = candidate._id
@@ -106,11 +96,6 @@ export default function Dashboard() {
               candidate?.profile?.firstName ? `Hello, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
             }</p>
           </div>
-          {/*
-            position: relative on the wrapper so the dropdown can be
-            absolutely positioned next to the icon. aria-* attributes make
-            the toggle accessible to screen readers as a real menu trigger.
-          */}
           <div ref={menuRef} style={{ position: 'relative' }}>
             <button
               type="button"

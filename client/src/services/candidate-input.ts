@@ -2,16 +2,11 @@ import type { Candidate, LoginInput, RegistrationInput } from '../types'
 
 const API = import.meta.env.VITE_API_URL
 
-// Server returns this shape from both /auth/signup and /auth/login. The token
-// is what the client uses to authenticate every subsequent request.
 export type AuthResponse = {
   token: string
   candidate: Candidate
 }
 
-// Centralised so we can't accidentally use the wrong header name or formatting
-// in one place. If we ever switch to a different scheme (e.g. cookies) only
-// this helper changes.
 function authHeader(token: string): Record<string, string> {
   return { Authorization: `Bearer ${token}` }
 }
@@ -23,8 +18,6 @@ export async function signup(input: LoginInput): Promise<AuthResponse> {
     body: JSON.stringify(input),
   })
   if (res.ok) return res.json() as Promise<AuthResponse>
-  // Read the server's error message so the UI can show something specific
-  // ("Email already exists", "Password too short") instead of a bare status code.
   const body = await res.json().catch(() => ({ message: `Signup failed (${res.status})` }))
   throw new Error(body.message ?? `Signup failed (${res.status})`)
 }

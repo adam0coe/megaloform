@@ -3,19 +3,11 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from 'express';
 import { signToken } from './jwt';
 
-// Centralised so signup and login return identical shapes. The token goes in
-// the body (not a cookie) for the simplest possible client integration —
-// httpOnly cookies are safer in browsers but require CORS credentials, CSRF
-// tokens, and a setup story. This is good enough for now; cookies are a
-// straightforward upgrade later.
 function buildAuthResponse(candidate: { _id: unknown }) {
   const token = signToken({ candidateId: String(candidate._id) });
   return { token, candidate };
 }
 
-// Password policy: 8 chars minimum. Resist adding "must include uppercase /
-// number / symbol" — research shows it pushes users toward password reuse
-// without measurably increasing entropy. Length is what matters.
 const MIN_PASSWORD_LENGTH = 8;
 
 async function signup(req: Request, res: Response) {
@@ -35,9 +27,6 @@ async function signup(req: Request, res: Response) {
     const sanitizedEmail = String(email).trim().toLowerCase();
     const existing = await Candidate.findOne({ "profile.email": sanitizedEmail });
 
-    // On signup we *can* be specific — the user trying to sign up wants to
-    // know if they already have an account. (On login we'd be vague to avoid
-    // email enumeration.)
     if (existing) {
       return res.status(409).json({ message: 'An account with that email already exists.' });
     }
@@ -73,8 +62,6 @@ async function login(req: Request, res: Response) {
     const sanitizedEmail = String(email).trim().toLowerCase();
     const candidate = await Candidate.findOne({ "profile.email": sanitizedEmail });
 
-    // Same generic message whether the email is unknown or the password is
-    // wrong. Prevents an attacker from enumerating which emails have accounts.
     const GENERIC = 'Invalid email or password.';
     if (!candidate) {
       return res.status(401).json({ message: GENERIC });
