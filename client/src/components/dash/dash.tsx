@@ -1,5 +1,5 @@
 import './dash.css'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Steps from '../steps/steps'
 import Register from '../steps/all-steps/register/register'
@@ -18,7 +18,26 @@ export default function Dashboard() {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState<string | null>(null)
 
+  // Hamburger menu (the #config icon). Open on click, close on outside click
+  // or after selecting an item.
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement | null>(null)
+
+  // Outside-click closes the menu. We attach the listener only while the
+  // menu is open — no work happening during the 99% of time it's closed.
+  useEffect(() => {
+    if (!menuOpen) return
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [menuOpen])
+
   function handleLogout() {
+    setMenuOpen(false)
     logout()
     // `replace` so the back button doesn't return the user to the dashboard
     // they just logged out of.
@@ -86,24 +105,63 @@ export default function Dashboard() {
             <p id="username">{
               candidate?.profile?.firstName ? `Hello, ${candidate.profile.firstName}!` : 'Welcome to PS2027!'
             }</p>
+          </div>
+          {/*
+            position: relative on the wrapper so the dropdown can be
+            absolutely positioned next to the icon. aria-* attributes make
+            the toggle accessible to screen readers as a real menu trigger.
+          */}
+          <div ref={menuRef} style={{ position: 'relative' }}>
             <button
               type="button"
-              onClick={handleLogout}
-              style={{
-                marginTop: '0.5rem',
-                padding: '0.4rem 0.8rem',
-                background: 'transparent',
-                color: 'inherit',
-                border: '1px solid currentColor',
-                borderRadius: '0.25rem',
-                cursor: 'pointer',
-                fontSize: '0.85rem',
-              }}
+              id="config"
+              className='user-icons'
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(o => !o)}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: 0 }}
             >
-              Log out
+              <Icon path={icons.menu} size={1.5} />
             </button>
+            {menuOpen && (
+              <div
+                role="menu"
+                style={{
+                  position: 'absolute',
+                  bottom: '100%',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  marginBottom: '0.5rem',
+                  background: 'var(--bg-medium)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  borderRadius: '0.5rem',
+                  padding: '0.25rem',
+                  minWidth: '8rem',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                  zIndex: 10,
+                }}
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={handleLogout}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    background: 'transparent',
+                    color: 'inherit',
+                    border: 'none',
+                    borderRadius: '0.25rem',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    fontSize: '0.95rem',
+                  }}
+                >
+                  Log out
+                </button>
+              </div>
+            )}
           </div>
-          <div id="config" className='user-icons'><Icon path={icons.menu} size={1.5} /></div>
         </div>
         <div id="dash-main">
           <div id="dash-header">
