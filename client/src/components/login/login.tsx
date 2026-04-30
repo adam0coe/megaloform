@@ -1,12 +1,50 @@
 import './login.css'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/logo-color-w.png'
 import loginImg from '../../assets/bg-imgs/login.png'
+import { useAuth } from '../../auth/AuthContext'
 
-type LoginProps = {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-}
+type Mode = 'login' | 'signup'
 
-export default function Login({ handleSubmit }: LoginProps) {
+export default function Login() {
+  const navigate = useNavigate()
+  const { login, signup } = useAuth()
+
+  const [mode, setMode] = useState<Mode>('login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  // The bug fix: errors that previously hit a silent console.log are now
+  // bound to UI state and shown to the user.
+  const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError(null)
+
+    const trimmedEmail = email.trim()
+    if (!trimmedEmail || !password) {
+      setError('Please fill in both email and password.')
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      // signup/login return the new candidate directly — we use its id for
+      // navigation right away. Reading `candidate` from the surrounding
+      // useAuth() closure here would give the stale (pre-update) value.
+      const newCandidate = mode === 'signup'
+        ? await signup(trimmedEmail, password)
+        : await login(trimmedEmail, password)
+      navigate(`/candidate/${newCandidate._id}`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
     <div id="login-container">
       <div id="img-container">
@@ -29,21 +67,52 @@ export default function Login({ handleSubmit }: LoginProps) {
 
         <div id="login-form">
           <div id="form-title">
-            <h1 className="data-form-title">Access your account</h1>
+            <h1 className="data-form-title">
+              {mode === 'login' ? 'Access your account' : 'Create your account'}
+            </h1>
             <p>Use your email and password to continue</p>
           </div>
           <div id="form-body">
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="email">E-Mail</label>
-                <input type="email" name="email" id="email" placeholder="john.smith@mail.com" required />
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="john.smith@mail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="password">Password</label>
-                <input type="password" name="password" id="password" minLength={4} required />
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  minLength={mode === 'signup' ? 8 : 4}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </div>
+
+              {error && (
+                <p role="alert" style={{ color: '#ff6b6b', marginTop: '0.5rem' }}>
+                  {error}
+                </p>
+              )}
+
               <p className="forgot">I forgot my password</p>
-              <input type="submit" name="submit" id="submit" value="Log in" />
+              <input
+                type="submit"
+                name="submit"
+                id="submit"
+                value={submitting ? 'Please wait…' : (mode === 'login' ? 'Log in' : 'Sign up')}
+                disabled={submitting}
+              />
             </form>
             <div id="divider">
               <span className="line"></span>
@@ -55,7 +124,27 @@ export default function Login({ handleSubmit }: LoginProps) {
             </button>
           </div>
           <p className="signup-prompt">
-            If you haven't created an account yet, <a href="">click here to create it</a>
+            {mode === 'login' ? (
+              <>
+                If you haven't created an account yet,{' '}
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setError(null); setMode('signup') }}
+                >
+                  click here to create it
+                </a>
+              </>
+            ) : (
+              <>
+                Already have an account?{' '}
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setError(null); setMode('login') }}
+                >
+                  click here to log in
+                </a>
+              </>
+            )}
           </p>
         </div>
       </div>

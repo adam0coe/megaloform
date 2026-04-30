@@ -30,7 +30,10 @@ import app from '../../app'
 import Candidate from '../../model'
 
 type ServicesModule = {
-  upsertCandidate: (input: { email: string; password: string }) => Promise<unknown>
+  signup: (input: { email: string; password: string }) => Promise<{
+    token: string
+    candidate: { _id: string; profile: { email: string } }
+  }>
 }
 
 let mongo: MongoMemoryServer
@@ -71,10 +74,15 @@ describe('e2e: candidate signup', () => {
     // Deliberately messy input — uppercase letters and surrounding
     // whitespace. The controller's `sanitizedEmail = email.trim().toLowerCase()`
     // logic must actually run for this test to pass.
-    await services.upsertCandidate({
+    // Password is 8+ chars to satisfy the new MIN_PASSWORD_LENGTH policy.
+    const result = await services.signup({
       email: '  Hello@Example.COM  ',
-      password: 'pw',
+      password: 'longenough',
     })
+
+    // Sanity: the new endpoint returns a token alongside the candidate.
+    expect(typeof result.token).toBe('string')
+    expect(result.token.length).toBeGreaterThan(0)
 
     // Query the real DB directly. If the round trip worked, exactly one
     // document should exist with the sanitized email.
