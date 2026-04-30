@@ -1,41 +1,91 @@
 import Candidate from './model';
 import bcrypt from "bcryptjs";
 import { Request, Response } from 'express';
+import { signToken } from './jwt';
 
-async function enter(req: Request, res: Response) {
+// Centralised so signup and login return identical shapes. The token goes in
+// the body (not a cookie) for the simplest possible client integration —
+// httpOnly cookies are safer in browsers but require CORS credentials, CSRF
+// tokens, and a setup story. This is good enough for now; cookies are a
+// straightforward upgrade later.
+function buildAuthResponse(candidate: { _id: unknown }) {
+  const token = signToken({ candidateId: String(candidate._id) });
+  return { token, candidate };
+}
+
+// Password policy: 8 chars minimum. Resist adding "must include uppercase /
+// number / symbol" — research shows it pushes users toward password reuse
+// without measurably increasing entropy. Length is what matters.
+const MIN_PASSWORD_LENGTH = 8;
+
+async function signup(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
 
-    if(!email || !password) {
-      return res.status(400).json({ message: 'Email and Password are needed!'})
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
     }
 
-    const sanitizedEmail = email.trim().toLowerCase();
-    const existingCandidate = await Candidate.findOne({ "profile.email": sanitizedEmail });
-
-    if(!existingCandidate) {
-      const passwordHash = await bcrypt.hash(password, 10);
-
-      const candidate = await Candidate.create({
-        profile: {
-          email: sanitizedEmail,
-          firstName: "",
-          lastNames: "",
-          phone: "",
-        },
-        isApproved: false,
-        passwordHash,
+    if (typeof password !== 'string' || password.length < MIN_PASSWORD_LENGTH) {
+      return res.status(400).json({
+        message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`,
       });
-
-      return res.status(200).json(candidate);
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, existingCandidate.passwordHash);
-    if (!isPasswordCorrect) {
-      return res.status(401).json({ message: "Incorrect Password" })
+    const sanitizedEmail = String(email).trim().toLowerCase();
+    const existing = await Candidate.findOne({ "profile.email": sanitizedEmail });
+
+    // On signup we *can* be specific — the user trying to sign up wants to
+    // know if they already have an account. (On login we'd be vague to avoid
+    // email enumeration.)
+    if (existing) {
+      return res.status(409).json({ message: 'An account with that email already exists.' });
     }
 
-    return res.status(200).json(existingCandidate)
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const candidate = await Candidate.create({
+      profile: {
+        email: sanitizedEmail,
+        firstName: "",
+        lastNames: "",
+        phone: "",
+      },
+      isApproved: false,
+      passwordHash,
+    });
+
+    return res.status(201).json(buildAuthResponse(candidate));
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+async function login(req: Request, res: Response) {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
+
+    const sanitizedEmail = String(email).trim().toLowerCase();
+    const candidate = await Candidate.findOne({ "profile.email": sanitizedEmail });
+
+    // Same generic message whether the email is unknown or the password is
+    // wrong. Prevents an attacker from enumerating which emails have accounts.
+    const GENERIC = 'Invalid email or password.';
+    if (!candidate) {
+      return res.status(401).json({ message: GENERIC });
+    }
+
+    const ok = await bcrypt.compare(password, candidate.passwordHash);
+    if (!ok) {
+      return res.status(401).json({ message: GENERIC });
+    }
+
+    return res.status(200).json(buildAuthResponse(candidate));
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -133,4 +183,4 @@ async function testCandidate(req: Request, res: Response) {
   }
 }
 
-export { enter, register, fetchCandidate, testCandidate }
+export { signup, login, register, fetchCandidate, testCandidate }
